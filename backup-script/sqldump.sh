@@ -1,14 +1,15 @@
 #!/bin/bash
-source postgre-backup.conf
+source /etc/postgre-backup.conf
 
 function backup(){
+  #echo $backup_dir
   # archivage de la bdd
-  mysqldump -h $host --user=$databaselogin --password=$databasepassword --all-databases > web_app.sql
-  tar --bzip2 -cvf $backup_dir/sqldump$(date "+-%Y-%m-%d-%H-%M").tar.bz2 web_app.sql
-  rm web_app.sql
+  mysqldump -h $host --user=$databaselogin --password=$databasepassword --all-databases > /tmp/web_app.sql
+  tar --bzip2 -cvf $backup_dir/sqldump$(date "+-%Y-%m-%d-%H-%M").tar.bz2 /tmp/web_app.sql
+  rm /tmp/web_app.sql
 
   # retention date
-  find ./$backup_dir/* -mtime +$number_of_day_to_keep -exec /bin/rm -f {} \;
+  find $backup_dir/* -mtime +$number_of_day_to_keep -exec /bin/rm -f {} \;
 
   # retention number
   let "number_of_file_to_keep++"
