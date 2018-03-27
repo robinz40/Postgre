@@ -3,7 +3,7 @@ source postgre-backup.conf
 
 function backup(){
   # archivage de la bdd
-  mysqldump --user=$databaselogin --password=$databasepassword --all-databases > web_app.sql
+  mysqldump -h $host --user=$databaselogin --password=$databasepassword --all-databases > web_app.sql
   tar --bzip2 -cvf $backup_dir/sqldump$(date "+-%Y-%m-%d-%H-%M").tar.bz2 web_app.sql
   rm web_app.sql
 
@@ -22,7 +22,7 @@ function backup(){
 
 # restauration de la bdd
 function restore(){
-  mysql --user=root --password=web_app < $(tar -xvf backup/$1)
+  mysql -h $host --user=root --password=web_app < $(tar -xvf backup/$1)
 }
 
 # liste des sauvegarde
